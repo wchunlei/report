@@ -11,16 +11,26 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {},
+    /*proxyTable: {
+      '/api': {
+        target: 'http://xxx.com:8080', // 你要代理的域名和端口号，要加上http
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': '/api' // 这里用‘/api’代替target里面的地址，组件中调用接口时直接用api代替 比如我要调用'http://xxx.com:8080/api/NEWS/getNews.json?page=1&pageSize=10
+          '，直接写‘/api/NEWS/getNews.json?page=1&pageSize=10’即可
+        }
+      },*/
 
-    // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
-    port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+      // Various Dev Server settings
+    host: '0.0.0.0', // can be overwritten by process.env.HOST
+    //env: require('./dev.env'),
+    port: 8081, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
 
-    
+
     /**
      * Source Maps
      */

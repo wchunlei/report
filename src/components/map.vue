@@ -6,8 +6,8 @@
       <div v-show="loading" style="background: #fff;width: 1750px; height: 800px;z-index: 998;position:absolute;opacity: 0.5;">
         <div v-show="loading" style="position:absolute;z-index: 999; width: 1750px;height:800px;opacity: 0.8;background: url(../../static/timg.gif) no-repeat center center fixed;"></div>
       </div>
-      <div id="map1" style="width: 850px;height:800px;display:inline-block"></div>
-      <div id="map2" style="width: 850px;height:800px;display:inline-block"></div>
+      <div id="map1" style="width: 800px;height:800px;display:inline-block"></div>
+      <div id="map2" style="width: 800px;height:800px;display:inline-block"></div>
     </div>
   </div>
 </template>
@@ -134,11 +134,13 @@
         var map = Loca.create('map1', {
           mapStyle: 'amap://styles/grey',
           features: ['bg', 'road','building'],
+          //center: [114.119593, 22.626881],
           center: [114.00252, 22.554134],
-          viewMode: '3D',
+          /*viewMode: '3D',
           pitch: 50,
-          pitchEnable: true,
+          pitchEnable: true,*/
           zoom: 12
+          //zoom: 11
         });
 
         var map1 = Loca.create('map2', {
@@ -174,11 +176,11 @@
 
         layer.setOptions({
           style: {
-            radius: 4,
-            fill: '#b7eff7',
-            lineWidth: 0.5,
-            stroke: '#ffffff',
-            opacity: 0.5,
+            radius: 1,
+            fill: 'red',
+            /*lineWidth: 0.5,
+            stroke: '#ffffff',*/
+            opacity: 1
           },
         });
 
