@@ -35,7 +35,6 @@
         <el-tab-pane label="选择地区" name="third"></el-tab-pane>
       </el-tabs>
     </div>-->
-
     <div v-if="showHomes">
       <el-carousel :interval="30000000" indicator-position="outside" height="800px"  @change="goToContent">
         <el-carousel-item v-for="item in homes" :key="item" >
@@ -402,7 +401,7 @@ export default {
       yearOptions: yearOptions() ,
       typeOptions: [{
         value: '0',
-        label: '行业'
+        label: '商事主体'
       },{
         value: '1',
         label: '地区'
@@ -448,7 +447,7 @@ export default {
         label: '全部产业',
         options: [{
           value: 'all',
-          label: '全部行业'
+          label: '全部商事主体'
         },{
           value: 'A',
           label: '农、林、牧、渔业'
@@ -528,7 +527,7 @@ export default {
       }],
       businessOptions: [{
         value: 'all',
-        label: '全部行业'
+        label: '全部商事主体'
       },{
         value: 'A',
         label: '农、林、牧、渔业'
