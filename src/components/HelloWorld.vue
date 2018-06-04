@@ -88,7 +88,6 @@
           </el-option-group>
         </el-select>
       </div>
-
       <el-carousel :interval="30000000" indicator-position="outside" height="700px" @change="gifPage">
 
         <el-carousel-item :key="item1" label="注册数量">
