@@ -3,11 +3,11 @@
     <div style="text-align: center; ">
       <!--<img v-show="loading" src="../../static/timg.gif"/>-->
       <!--<i class="el-icon-loading"></i>-->
-      <div v-show="loading" style="background: #fff;width: 1750px; height: 800px;z-index: 998;position:absolute;opacity: 0.5;">
-        <div v-show="loading" style="position:absolute;z-index: 999; width: 1750px;height:800px;opacity: 0.8;background: url(../../static/timg.gif) no-repeat center center fixed;"></div>
+      <div v-show="loading" style="background: #fff;width: 1300px; height: 680px;z-index: 998;position:absolute;opacity: 0.5;">
+        <div v-show="loading" style="position:absolute;z-index: 999; width: 1300px;height:680px;opacity: 0.8;background: url(../../static/timg.gif) no-repeat center center fixed;"></div>
       </div>
-      <div id="map1" style="width: 800px;height:800px;display:inline-block"></div>
-      <div id="map2" style="width: 800px;height:800px;display:inline-block"></div>
+      <div id="map1" style="width: 600px;height:680px;display:inline-block"></div>
+      <div id="map2" style="width: 600px;height:680px;display:inline-block"></div>
     </div>
   </div>
 </template>
@@ -15,7 +15,7 @@
 <script type="text/ECMAScript-6">
   export default {
     name: 'HelloWorld',
-    props: ['hydm', 'year', 'dq', 'dialog'],
+    props: ['qdate', 'qdq', 'dialog', 'type' ],
     data () {
       const yearOptions = () => {
         let arr = [];
@@ -67,8 +67,8 @@
           pitchEnable: true,
           zoom: 12
         });
-
         var map1 = Loca.create('map2', {
+          mapStyle: 'amap://styles/grey',
           features: ['bg', 'road','building'],
           center: [114.00252, 22.554134],
           viewMode: '3D',
@@ -77,6 +77,15 @@
           zoom: 12
         });
 
+        /*var map1 = Loca.create('map2', {
+          features: ['bg', 'road','building'],
+          center: [114.00252, 22.554134],
+          viewMode: '3D',
+          pitch: 50,
+          pitchEnable: true,
+          zoom: 12
+        });*/
+
         //控制器
         map.on('mapload', function() {
           map.getMap().plugin(['AMap.ControlBar'], function () {
@@ -84,21 +93,25 @@
             map.getMap().addControl(controlBar);
           });
         });
-
         map1.on('mapload', function() {
+          map.getMap().plugin(['AMap.ControlBar'], function () {
+            var controlBar = new AMap.ControlBar();
+            map.getMap().addControl(controlBar);
+          });
+        });
+
+        /*map1.on('mapload', function() {
           map1.getMap().plugin(['AMap.ControlBar'], function () {
             var controlBar = new AMap.ControlBar();
             map1.getMap().addControl(controlBar);
           });
-        });
+        });*/
 
         var layer = Loca.visualLayer({
           container: map,
           type: 'point',
           shape: 'circle'
         });
-
-
         layer.setOptions({
           style: {
             radius: 4,
@@ -108,9 +121,22 @@
             opacity: 0.5,
           },
         });
-
-
         var layer1 = Loca.visualLayer({
+          container: map,
+          type: 'point',
+          shape: 'circle'
+        });
+        layer1.setOptions({
+          style: {
+            radius: 4,
+            fill: '#b7eff7',
+            lineWidth: 0.5,
+            stroke: '#ffffff',
+            opacity: 0.5,
+          },
+        });
+
+        /*var layer1 = Loca.visualLayer({
           container: map1,
           type: 'heatmap',
           shape: 'normal'
@@ -128,7 +154,7 @@
             0.9: '#ffea00',
             1.0: 'red'
           }
-        });
+        });*/
       },
       getMapInfo () {
         var map = Loca.create('map1', {
@@ -142,18 +168,29 @@
           zoom: 12
           //zoom: 11
         });
-
         var map1 = Loca.create('map2', {
+          mapStyle: 'amap://styles/grey',
+          features: ['bg', 'road','building'],
+          //center: [114.119593, 22.626881],
+          center: [114.00252, 22.554134],
+          /*viewMode: '3D',
+           pitch: 50,
+           pitchEnable: true,*/
+          zoom: 12
+          //zoom: 11
+        });
+
+        /*var map1 = Loca.create('map2', {
           features: ['bg', 'road','building'],
           center: [114.00252, 22.554134],
           viewMode: '3D',
           pitch: 50,
           pitchEnable: true,
           zoom: 12
-        });
+        });*/
 
         //控制器
-        map.on('mapload', function() {
+        /*map.on('mapload', function() {
           map.getMap().plugin(['AMap.ControlBar'], function () {
             var controlBar = new AMap.ControlBar();
             map.getMap().addControl(controlBar);
@@ -165,15 +202,13 @@
             var controlBar = new AMap.ControlBar();
             map1.getMap().addControl(controlBar);
           });
-        });
+        });*/
 
         var layer = Loca.visualLayer({
           container: map,
           type: 'point',
           shape: 'circle'
         });
-
-
         layer.setOptions({
           style: {
             radius: 1,
@@ -183,9 +218,22 @@
             opacity: 1
           },
         });
-
-
         var layer1 = Loca.visualLayer({
+          container: map1,
+          type: 'point',
+          shape: 'circle'
+        });
+        layer1.setOptions({
+          style: {
+            radius: 1,
+            fill: 'green',
+            /*lineWidth: 0.5,
+             stroke: '#ffffff',*/
+            opacity: 1
+          },
+        });
+
+        /*var layer1 = Loca.visualLayer({
           container: map1,
           type: 'heatmap',
           shape: 'normal'
@@ -203,7 +251,7 @@
             0.9: '#ffea00',
             1.0: 'red'
           }
-        });
+        });*/
         /*$.get('http://10.0.10.253:8000/api/LnglatH', function (data) {
 
 
@@ -223,24 +271,31 @@
           alert()
 
         });*/
-        this.$http.get('http://10.0.10.253:8000/api/LnglatH',{params: {
-          hydm: this.hydm,
-          dq: this.dq,
-          year: this.year
+        let urlLive = 'http://10.0.10.253:8000/api/liveL';
+        let urlAbnormal = 'http://10.0.10.253:8000/api/abnormalL';
+        if (this.type == 1) {
+          urlLive = 'http://10.0.10.253:8000/api/liveL';
+          urlAbnormal = 'http://10.0.10.253:8000/api/abnormalL';
+        } else {
+          urlLive = 'http://10.0.10.253:8000/api/liveLZ';
+          urlAbnormal = 'http://10.0.10.253:8000/api/abnormalLZ';
+        }
+        this.$http.get(urlAbnormal,{params: {
+          qdate: this.qdate,
+          qdq: this.qdq
         }}).then(response => {
           console.log(response);
           layer.setData(response.data.point, {
             lnglat: 'loc',
           });
-
-          layer1.setData(response.data.heatmap, {
+          /*layer1.setData(response.data.heatmap, {
             lnglat: 'loc',
             max:20,
             min:0,
             value: 'c'
-          });
+          });*/
           layer.render();
-          layer1.render();
+          //layer1.render();
           this.loading = false;
           /*if (!this.loading) {
             this.mapShow1 = true;
@@ -250,6 +305,31 @@
         .catch(function (response) {
           console.log(response);
         });
+        this.$http.get(urlLive,{params: {
+          qdate: this.qdate,
+          qdq: this.qdq
+        }}).then(response => {
+            console.log(response);
+            layer1.setData(response.data.point, {
+              lnglat: 'loc',
+            });
+            /*layer1.setData(response.data.heatmap, {
+              lnglat: 'loc',
+              max:20,
+              min:0,
+              value: 'c'
+            });
+            layer.render();*/
+            layer1.render();
+            this.loading = false;
+            /*if (!this.loading) {
+             this.mapShow1 = true;
+             this.mapShow2 = true;
+             }*/
+          })
+          .catch(function (response) {
+            console.log(response);
+          });
       }
     }
   }
@@ -375,4 +455,3 @@
     padding-left: 25px;
   }
 </style>
-

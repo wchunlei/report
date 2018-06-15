@@ -1,32 +1,37 @@
 <template>
-  <div >
-    <div id="containerSurvival" style="width: 400px;height: 225px;display: inline-block;margin-top: -35px;box-shadow: 2px 2px 2px #888888;"></div>
-    <el-dialog
-      title="存活率"
-      :visible.sync="survivalRate"
-      width="54%"
+  <div class="hello">
+    <div style="display:inline-block;margin-right:50px">
+      <div id="containerUpdate" :style="{width: '1200px', height: '600px'}"></div>
+    </div>
+    <!--<div style="display:inline-block;margin-right:50px;text-align: left;">
+      <div style="display:inline-block;margin-right:50px">
+        <div class="select">
+          <el-select v-model="selectYear" placeholder="请选择" class="select-info">
+            <el-option
+              v-for="item in yearOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+              class="select-info-option">
+            </el-option>
+          </el-select>
+        </div>
+      </div>
+      <div id="containerLiveArea" :style="{width: '800px', height: '600px'}"></div>
+    </div>-->
+
+    <!--<el-dialog
+      title="消亡-存活"
+      :visible.sync="centerDialogVisibleMap"
+      width="1800px"
       :fullscreen='full'
-      :modal="modal"
       center>
-      <survivalInfo style="margin-left:100px"></survivalInfo>
-      <!--<span slot="title">
+      <mapLive ref="mapLive" :qdate="qdate" :qdq="qdq" :dialog="centerDialogVisibleMap"></mapLive>
+      <span slot="title">
         <span style="color: #ccc;font-size: 24px;display:inline-block;margin-right:400px">消亡</span>
         <span style="color: red;font-size: 24px;display:inline-block;margin-left:400px">存活</span>
-      </span>-->
-    </el-dialog>
-    <el-dialog
-      title="更新率"
-      :visible.sync="updateRate"
-      width="54%"
-      :fullscreen='full'
-      :modal="modal"
-      center>
-      <updateInfo style="margin-left:100px"></updateInfo>
-      <!--<span slot="title">
-        <span style="color: #ccc;font-size: 24px;display:inline-block;margin-right:400px">消亡</span>
-        <span style="color: red;font-size: 24px;display:inline-block;margin-left:400px">存活</span>
-      </span>-->
-    </el-dialog>
+      </span>
+    </el-dialog>-->
   </div>
 </template>
 
@@ -35,26 +40,42 @@
   import HighchartsMore from 'highcharts/highcharts-more';
   import HighchartsDrilldown from 'highcharts/modules/drilldown';
   import Highcharts3D from 'highcharts/highcharts-3d';
-  import survivalInfo from './survivalRate/survivalInfo';
-  import updateInfo from './survivalRate/updateInfo';
-  //import exporting from 'highcharts/modules/exporting';
+  //import mapLive from './mapLive';
   HighchartsMore(Highcharts)
   HighchartsDrilldown(Highcharts);
   Highcharts3D(Highcharts);
-  //exporting(Highcharts);
   export default {
     name: 'HelloWorld',
-    components: { survivalInfo, updateInfo },
+    components: {  },
+    props: ['dialogLive'],
     data () {
+      const yearOptions = () => {
+        let arr = [];
+        for (let i = 1996;i <= 2016;i++) {
+          for (let j=1; j<13; j++) {
+            let obj = {};
+            let month = j;
+            if (month < 10) {
+              month = '0' + month;
+            }
+            obj.value = i.toString() + '-' + month;
+            obj.label = i.toString() + '年' + month + '月';
+            arr.push(obj);
+            if (i == 2016 && j == 6) {
+              return arr;
+            }
+          }
+        }
+        //console.log('arr',arr);
+        return arr;
+      };
       return {
-        pro: '',
-        survivalRate: false,
-        updateRate: false,
-        dataX1: [],
-        liveRate1: [],
-        update: [],
-        full: false,
-        modal:true,
+        yearOptions: yearOptions() ,
+        selectYear: '2016-06',
+        centerDialogVisibleMap: false,
+        full: true,
+        qdate: '',
+        qdq: '',
         allData: {
           datasets: [],
           xData: []
@@ -65,103 +86,61 @@
         liveObj: {},
         die: [],
         dieObj: {},
-        liveRate: [],
+        updateRate: [],
         dataSumObj: {},
         dataLiveX: [],
         dataLiveY: []
       }
     },
-    created () {
-      this.getData();
-      //this.getDataInfo();
+    created() {
+
+    },
+    watch: {
+      "selectYear" (newval,oldval) {
+        this.liveInfo(newval);
+        this.qdate = newval;
+      },
     },
     mounted(){
+      this.getData();
+      //this.liveInfo('2016-06');
       this.init();
-      //this.initInfo();
       //this.drawLineLiveArea()
     },
     methods: {
       getData () {
         this.$http.get('http://10.0.10.253:8000/api/qygxl').then(response => {
-            console.log('response.data',response.data);
-            if (this.dataX1) {
-              this.dataX1 = [];
-            }
-            if (this.liveRate1) {
-              this.liveRate1 = [];
-            }
-            response.data.map(arr=>{
-              let temp;
-              //temp = arr.sj.split('-').join('.');
-              /*temp = parseInt(arr.sj.split('-')[0]) + parseInt(arr.sj.split('-')[1])*0.083;
-              this.dataX.push(parseFloat(temp));
-              this.live.push(parseFloat(arr.cunhuo));
-              this.die.push(parseFloat(arr.xiaowang));*/
-              this.dataX1.push(arr.sj);
-              this.liveRate1.push(parseFloat(arr.cunhuolv));
-              this.update.push(parseFloat(arr.gengxinlv))
-            })
-            console.log('dataX1',this.dataX1)
-            /*this.liveObj.data = this.liveRate;
-            this.liveObj.name = "存活率";
-            this.liveObj.type = "line";
-            this.liveObj.unit = "";
-            this.liveObj.valueDecimals = 1;
-            this.dataY.push(this.liveObj);
-            this.dataSumObj.data = this.live;
-            this.dataSumObj.name = "存活企业";
-            this.dataSumObj.type = "area";
-            this.dataSumObj.unit = "家";
-            this.dataSumObj.valueDecimals = 0;
-            this.dataY.push(this.dataSumObj);
-            this.dieObj.data = this.die;
-            this.dieObj.name = "消亡企业";
-            this.dieObj.type = "area";
-            this.dieObj.unit = "家";
-            this.dieObj.valueDecimals = 0;
-            this.dataY.push(this.dieObj);
-            this.allData.datasets = this.dataY;
-            this.allData.xData = this.dataX;*/
-            //console.log("allData1",this.allData)
-            this.init();
-          })
-          .catch(function (response) {
-            console.log(response);
-          });
-      },
-      getDataInfo () {
-        this.$http.get('http://10.0.10.253:8000/api/qychl').then(response => {
-            console.log('response.data',response.data);
+            console.log('response.data--update',response.data);
             if (this.dataX) {
               this.dataX = [];
             }
-            if (this.liveRate) {
-              this.liveRate = [];
+            if (this.updateRate) {
+              this.updateRate = [];
             }
             response.data.map(arr=>{
               let temp;
               //temp = arr.sj.split('-').join('.');
               temp = parseInt(arr.sj.split('-')[0]) + parseInt(arr.sj.split('-')[1])*0.083;
               this.dataX.push(parseFloat(temp));
-              this.live.push(parseFloat(arr.cunhuo));
-              this.die.push(parseFloat(arr.xiaowang));
-              this.liveRate.push(parseFloat(arr.cunhuolv));
+              this.live.push(parseFloat(arr.cunhuoz));
+              this.die.push(parseFloat(arr.xiaowangz));
+              this.updateRate.push(parseFloat(arr.gengxinlv));
             })
             //console.log('dataX',this.dataX)
-            this.liveObj.data = this.liveRate;
-            this.liveObj.name = "存活率";
+            this.liveObj.data = this.updateRate;
+            this.liveObj.name = "更新率";
             this.liveObj.type = "line";
             this.liveObj.unit = "";
             this.liveObj.valueDecimals = 1;
             this.dataY.push(this.liveObj);
             this.dataSumObj.data = this.live;
-            this.dataSumObj.name = "存活企业";
+            this.dataSumObj.name = "存活新增企业";
             this.dataSumObj.type = "area";
             this.dataSumObj.unit = "家";
             this.dataSumObj.valueDecimals = 0;
             this.dataY.push(this.dataSumObj);
             this.dieObj.data = this.die;
-            this.dieObj.name = "消亡企业";
+            this.dieObj.name = "消亡新增企业";
             this.dieObj.type = "area";
             this.dieObj.unit = "家";
             this.dieObj.valueDecimals = 0;
@@ -175,160 +154,39 @@
             console.log(response);
           });
       },
-      init () {
-        /*var chart = Highcharts.chart('containerSurvival', {
-          title: {
-            text: '存活与更新'
-          },
-          subtitle: {
-            text: ''
-          },
-          xAxis: [{
-            categories: this.dataX,
-            crosshair: true
-          }],
-          yAxis: {
-            title: {
-              text: '存活与更新'
+      liveInfo (newval) {
+        this.$http.get('http://10.0.10.253:8000/api/qychxx',{params: {
+          qdate: newval
+        }}).then(response => {
+            if (this.dataLiveX) {
+              this.dataLiveX = [];
             }
-          },
-          legend: {
-            enabled: false,
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle'
-          },
-          plotOptions: {
-            series: {
-              label: {
-                connectorAllowed: false
-              },
-              pointStart: 2010
+            if (this.dataLiveY) {
+              this.dataLiveY = [];
             }
-          },
-          series: [{
-            name: '存活指数',
-            data: this.liveRate
-          },{
-            name: '更新指数',
-            data: [43934, 45000, 50000, 70000, 100000, 130000, 150000, 184175]
-          }],
-          responsive: {
-            rules: [{
-              condition: {
-                maxWidth: 500
-              },
-              chartOptions: {
-                legend: {
-                  layout: 'horizontal',
-                  align: 'center',
-                  verticalAlign: 'bottom'
-                }
-              }
-            }]
-          }
-        });*/
-        let _this = this;
-        var chart = Highcharts.chart('containerSurvival', {
-          chart: {
-            zoomType: 'xy'
-          },
-          title: {
-            text: '存活与更新'
-          },
-          subtitle: {
-            //text: '数据来源: WorldClimate.com'
-          },
-          xAxis: [{
-            categories: this.dataX1,
-            crosshair: true
-          }],
-          yAxis: [{ // Primary yAxis
-            labels: {
-              format: '',
-              style: {
-                color: Highcharts.getOptions().colors[1]
-              }
-            },
-            title: {
-              text: '存活率',
-              style: {
-                color: Highcharts.getOptions().colors[1]
-              }
-            }
-          }, { // Secondary yAxis
-            title: {
-              text: '更新率',
-              style: {
-                color: Highcharts.getOptions().colors[0]
-              }
-            },
-            labels: {
-              format: '',
-              style: {
-                color: Highcharts.getOptions().colors[0]
-              }
-            },
-            opposite: true
-          }],
-          tooltip: {
-            shared: true
-          },
-          legend: {
-            enabled: false,  //不显示标注
-            layout: 'vertical',
-            align: 'left',
-            x: 120,
-            verticalAlign: 'top',
-            y: 100,
-            floating: true,
-            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
-          },
-          plotOptions: {
-            spline: {
-              cursor: 'pointer',
-              events: {
-                click: function () {
-                  _this.survivalRate = true;
-                }
-              },
-              dataLabels: {
-                enabled: true,
-                format: '{dataset.name}'
-              }
-            },
-            line: {
-              cursor: 'pointer',
-              events: {
-                click: function () {
-                  _this.updateRate = true;
-                }
-              },
-              dataLabels: {
-                enabled: true,
-                format: '{dataset.name}'
-              }
-            }
-          },
-          series: [{
-            name: '更新率',
-            type: 'line',
-            yAxis: 1,
-            data: this.update,
-            tooltip: {
-              valueSuffix: ''
-            }
-          }, {
-            name: '存活率',
-            type: 'spline',
-            data: this.liveRate1,
-            tooltip: {
-              valueSuffix: ''
-            }
-          }]
-        });
+            let tempObj = {};
+            let temp = [];
+            let tempObj1 = {};
+            let temp1 = [];
+            response.data.map(arr=>{
+              this.dataLiveX.push(arr.dq);
+              temp.push(arr.xiaowang);
+              temp1.push(arr.cunhuo);
+            })
+            tempObj.name = "消亡";
+            tempObj.data = temp;
+            tempObj1.name = "存活";
+            tempObj1.data = temp1;
+            this.dataLiveY.push(tempObj);
+            this.dataLiveY.push(tempObj1);
+            console.log(this.dataLiveY)
+            this.drawLineLiveArea();
+          })
+          .catch(function (response) {
+            console.log(response);
+          });
       },
-      initInfo () {
+      init () {
         /*
          本例子的目的是为了演示通过 Dom 事件、Highcharts 事件、Highcharts API 来讲一个页面中的多个图表进行联动的。
          本例通过循环创建类似的图表并绑定鼠标的滑动事件来对多个图表进行演示联动效果。
@@ -336,12 +194,12 @@
         /**
          * 为了让多个图表的提示框即十字准星线能够联动，这里绑定多个图表的附件 dom 的鼠标事件进行联动
          */
-        console.log('Highcharts',Highcharts.charts)
-        $('#containerLive').bind('mousemove touchmove touchstart', function (e) {
+        console.log('Highcharts------',Highcharts.charts)
+        $('#containerUpdate').bind('mousemove touchmove touchstart', function (e) {
           /*let chart;
            let point;
            let event;*/
-          for (let i = 6; i < Highcharts.charts.length; i++) {
+          for (let i = 20; i < Highcharts.charts.length; i++) {
             if (typeof Highcharts.charts[i] !== 'undefined') {
               if (Highcharts.charts[i].renderTo.id == '') {
                 //console.log('Highcharts.charts',Highcharts.charts[i].renderTo.id + '123')
@@ -401,7 +259,7 @@
           });
           //console.log('dataset1',dataset.data)
           let dom = $('<div class="chart">')
-            .appendTo('#containerLive')
+            .appendTo('#containerUpdate')
           //console.log(dom[0])
           //dom[0].style.width = '800px';
           //dom[0].style.height = '200px';
@@ -471,7 +329,7 @@
                 cursor: 'pointer',
                 events: {
                   click: function () {
-                    alert()
+                    //alert()
                     console.log(this)
                   }
                 },
@@ -514,6 +372,95 @@
         });
         //});
       },
+      drawLineLiveArea () {
+        let _this = this;
+        var chart = Highcharts.chart('containerLiveArea', {
+          chart: {
+            type: 'column'
+          },
+          title: {
+            text: '企业存亡数量'
+          },
+          xAxis: {
+            categories: this.dataLiveX
+          },
+          yAxis: {
+            min: 0,
+            title: {
+              text: '企业存亡数量'
+            },
+            stackLabels: {  // 堆叠数据标签
+              enabled: true,
+              style: {
+                fontWeight: 'bold',
+                color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+              }
+            }
+          },
+          legend: {
+            align: 'right',
+            x: -30,
+            verticalAlign: 'top',
+            y: 25,
+            floating: true,
+            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+          },
+          tooltip: {
+            formatter: function () {
+              return '<b>' + this.x + '</b><br/>' +
+                this.series.name + ': ' + this.y + '<br/>' +
+                '总量: ' + this.point.stackTotal;
+            }
+          },
+          plotOptions: {
+            column: {
+              stacking: 'normal',
+              dataLabels: {
+                enabled: true,
+                color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                style: {
+                  // 如果不需要数据标签阴影，可以将 textOutline 设置为 'none'
+                  textOutline: '1px 1px black'
+                }
+              }
+            },
+            series: {
+              cursor: 'pointer',
+              point: {
+                events: {
+                  click: function () {
+                    _this.centerDialogVisibleMap = true;
+                    _this.qdq = this.category;
+                    _this.qdate = _this.selectYear;
+                    console.log(this)
+                  }
+                }
+              }
+            }
+          },
+          series: this.dataLiveY
+        });
+      }
     }
   }
 </script>
+
+<style scoped>
+  .chart {
+    min-width: 320px;
+    max-width: 800px;
+    height: 220px;
+    margin: 0 auto;
+  }
+  .select {
+    margin-bottom: 20px;
+  }
+</style>
+<style>
+  .v-modal {
+    z-index: 0 !important;
+  }
+</style>

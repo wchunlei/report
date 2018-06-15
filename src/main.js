@@ -7,8 +7,10 @@ import axios from 'axios'
 import echarts from 'echarts';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-var Highcharts = require('highcharts/highmaps');
 import $ from 'jquery';
+//var Highcharts = require('highcharts/highmaps');
+//import Highcharts from 'highcharts';
+//Vue.use(Highcharts)
 
 Vue.prototype.$http = axios;
 Vue.prototype.$echarts = echarts;

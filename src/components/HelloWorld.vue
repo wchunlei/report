@@ -24,9 +24,10 @@
         <div id="container2" :style="{width: '950px', height: '600px'}"></div>
       </el-carousel-item>
     </el-carousel>-->
-    <div style="width:100%;height: 80px;background: #0074D9;margin-bottom:50px;text-align: left;line-height: 80px">
-      <img src="../../static/logo.png" alt="" style="display:inline-block;width:124px;height: 42px;margin: 16px 0px 0 100px;float:left">
+    <div style="width:100%;height: 80px;background: rgb(39, 45, 60);margin-bottom:0px;text-align: left;line-height: 80px">
+      <img src="../../static/logo.png" alt="" style="display:inline-block;width:124px;height: 42px;margin: 16px 10px 0px 7px;float:left">
       <div style="font-size: 30px;font-family: Microsoft Yahei; font-weight: 900; color: #ffffff;letter-spacing: 3px;display:inline-block;">深圳市行业态势发展系统</div>
+      <div style="font-size: 16px;font-family: Microsoft Yahei; font-weight: 900; color: #ffffff;letter-spacing: 3px;display:inline-block;float: right;margin-right: 7px">{{ dateFormat }}</div>
     </div>
     <!--<div style="margin-top: -50px">
       <el-tabs v-model="tab" type="card" @tab-click="tabClick" style="width:100%;background: #343434;">
@@ -35,7 +36,7 @@
         <el-tab-pane label="选择地区" name="third"></el-tab-pane>
       </el-tabs>
     </div>-->
-    <div v-if="showHomes">
+    <!--<div v-if="showHomes">
       <el-carousel :interval="30000000" indicator-position="outside" height="800px"  @change="goToContent">
         <el-carousel-item v-for="item in homes" :key="item" >
           <div style="display:inline-block;margin-right:50px">
@@ -45,11 +46,51 @@
           </div>
         </el-carousel-item>
       </el-carousel>
+    </div>-->
+    <div class="sliderLeft" style="">
+      <div class="slider" >
+        <!--<p>企业注册总数</p>-->
+        <Register></Register>
+      </div>
+      <div class="slider">
+        <Insured></Insured>
+      </div>
+      <div class="slider">
+        <SurvivalRate></SurvivalRate>
+      </div>
+
+      <div class="slider">
+        <Assets></Assets>
+      </div>
+
+      <!--</div>-->
     </div>
 
-    <div v-show="showContent">
-      <div class="select" style="margin-left: 128px">
-        <!--<el-select v-model="selectBusiness" placeholder="请选择" class="select-info">
+    <div style="display: inline-block;">
+      <mapArea></mapArea>
+    </div>
+
+    <div class="sliderRight" style="">
+      <!--<div class="slider">
+        <AbnormalRate></AbnormalRate>
+      </div>-->
+      <div class="slider">
+        <Economic></Economic>
+      </div>
+      <div class="slider">
+        <Factory></Factory>
+      </div>
+      <div class="slider">
+        <Business></Business>
+      </div>
+      <div class="slider">
+        <Cloud></Cloud>
+      </div>
+    </div>
+
+    <!--<div v-show="showContent">
+      &lt;!&ndash;<div class="select" style="margin-left: 128px">
+        &lt;!&ndash;<el-select v-model="selectBusiness" placeholder="请选择" class="select-info">
           <el-option
             v-for="item in businessOptions"
             :key="item.value"
@@ -57,7 +98,7 @@
             :value="item.value"
             class="select-info-option">
           </el-option>
-        </el-select>-->
+        </el-select>&ndash;&gt;
         <el-select v-model="type" placeholder="请选择">
           <el-option
             v-for="item in typeOptions"
@@ -87,11 +128,11 @@
             </el-option>
           </el-option-group>
         </el-select>
-      </div>
+      </div>&ndash;&gt;
       <el-carousel :interval="30000000" indicator-position="outside" height="700px" @change="gifPage">
 
-        <el-carousel-item :key="item1" label="注册数量">
-          <!--<div id="myChart" :style="{width: '500px', height: '500px'}"></div>-->
+        &lt;!&ndash;<el-carousel-item :key="item1" label="注册数量">
+          &lt;!&ndash;<div id="myChart" :style="{width: '500px', height: '500px'}"></div>&ndash;&gt;
           <div style="display:inline-block;margin-right:50px">
             <div class="select">
               <el-select v-model="selectYear" placeholder="请选择" class="select-info">
@@ -109,11 +150,11 @@
                 @change="autoPlay"
                 style="margin-left:20px;">
               </el-switch>
-              <!--<el-date-picker
+              &lt;!&ndash;<el-date-picker
                 v-model="value"
                 type="year"
                 placeholder="选择年">
-              </el-date-picker>-->
+              </el-date-picker>&ndash;&gt;
             </div>
             <div id="containerA" :style="{width: '800px', height: '600px'}"></div>
           </div>
@@ -147,7 +188,7 @@
         </el-carousel-item>
 
         <el-carousel-item :key="item2" label="参保人数">
-          <!--<div id="myChart" :style="{width: '500px', height: '500px'}"></div>-->
+          &lt;!&ndash;<div id="myChart" :style="{width: '500px', height: '500px'}"></div>&ndash;&gt;
           <div style="display:inline-block;margin-right:50px">
             <div class="select">
               <el-select v-model="selectWorkYear" placeholder="请选择" class="select-info">
@@ -159,19 +200,19 @@
                   class="select-info-option">
                 </el-option>
               </el-select>
-              <!--<el-button v-show="auto" type="primary" round @click="autoPlay">自动播放</el-button>
-              <el-button v-show="cancel" type="primary" round @click="cancelPlay">取消播放</el-button>-->
+              &lt;!&ndash;<el-button v-show="auto" type="primary" round @click="autoPlay">自动播放</el-button>
+              <el-button v-show="cancel" type="primary" round @click="cancelPlay">取消播放</el-button>&ndash;&gt;
               <el-switch
                 v-model="switchsWork"
                 active-text="自动播放"
                 @change="autoPlayWork"
                 style="margin-left:20px;">
               </el-switch>
-              <!--<el-date-picker
+              &lt;!&ndash;<el-date-picker
                 v-model="value"
                 type="year"
                 placeholder="选择年">
-              </el-date-picker>-->
+              </el-date-picker>&ndash;&gt;
             </div>
             <div id="containerWork" :style="{width: '800px', height: '600px'}"></div>
           </div>
@@ -205,7 +246,7 @@
         </el-carousel-item>
 
         <el-carousel-item :key="item3" label="注册资本">
-          <!--<div id="myChart" :style="{width: '500px', height: '500px'}"></div>-->
+          &lt;!&ndash;<div id="myChart" :style="{width: '500px', height: '500px'}"></div>&ndash;&gt;
           <div style="display:inline-block;margin-right:50px">
             <div class="select">
               <el-select v-model="selectMoneyYear" placeholder="请选择" class="select-info">
@@ -223,11 +264,11 @@
                 @change="autoPlayMoney"
                 style="margin-left:20px;">
               </el-switch>
-              <!--<el-date-picker
+              &lt;!&ndash;<el-date-picker
                 v-model="value"
                 type="year"
                 placeholder="选择年">
-              </el-date-picker>-->
+              </el-date-picker>&ndash;&gt;
             </div>
             <div id="containerMoney" :style="{width: '800px', height: '600px'}"></div>
           </div>
@@ -261,9 +302,9 @@
         </el-carousel-item>
 
         <el-carousel-item :key="item4" label="时空变化">
-          <!--<div id="myChart" :style="{width: '500px', height: '500px'}"></div>-->
+          &lt;!&ndash;<div id="myChart" :style="{width: '500px', height: '500px'}"></div>&ndash;&gt;
           <div style="display:inline-block;margin-right:50px">
-            <!--<div class="select">
+            &lt;!&ndash;<div class="select">
               <el-select v-model="selectMoneyYear" placeholder="请选择" class="select-info">
                 <el-option
                   v-for="item in yearOptions"
@@ -279,7 +320,7 @@
                 @change="autoPlayMoney"
                 style="margin-left:20px;">
               </el-switch>
-            </div>-->
+            </div>&ndash;&gt;
             <div>
               <img v-if="cky" style="width: 1600px;height: 700px" src="../../static/cky.gif" alt="" :class="[isTestImg, isStop]" />
               <img v-if="dc" style="width: 1600px;height: 700px" src="../../static/dc.gif" alt="" class="testImg" />
@@ -296,28 +337,35 @@
           </div>
         </el-carousel-item>
 
+        <el-carousel-item :key="item5" label="企业存亡">
+          <liveCompany></liveCompany>
+        </el-carousel-item>&ndash;&gt;
+
+        &lt;!&ndash;<el-carousel-item :key="item6" label="企业存亡">
+          <test></test>
+        </el-carousel-item>&ndash;&gt;
+        <el-carousel-item :key="item6" label="企业存亡">
+          <mapArea></mapArea>
+        </el-carousel-item>
+
       </el-carousel>
-    </div>
+
+
+    </div>-->
     <!--<el-button v-if="showPlay" type="primary" @click="playOrPause">播放</el-button>
     <el-button v-if="showPause" type="primary"  @click="playOrPause">暂停</el-button>-->
 
     <el-dialog
-      title="详情"
+      title="存活率"
       :visible.sync="centerDialogVisible"
-      width="1800px"
+      width="54%"
       :fullscreen='full'
+      :modal="modal"
       center>
-      <!--<div style="text-align: center">
-        <div id="map1" style="width: 850px;height:800px;display:inline-block"></div>
-        <div id="map2" style="width: 850px;height:800px;display:inline-block"></div>
-      </div>-->
-      <!--<div v-loading.body="listLoading">加载中...</div>-->
-      <!--<div v-loading.body="listLoading" style="z-index: 999">加载中...</div>-->
-      <Map ref="map" :hydm="hydm" :year="year" :dq="dq" :dialog="centerDialogVisible"></Map>
-      <!--<span slot="footer" class="dialog-footer">
-        <div v-loading.body="listLoading">加载中...</div>
-        <el-button @click="centerDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+      <survivalInfo style="margin-left:100px"></survivalInfo>
+      <!--<span slot="title">
+        <span style="color: #ccc;font-size: 24px;display:inline-block;margin-right:400px">消亡</span>
+        <span style="color: red;font-size: 24px;display:inline-block;margin-left:400px">存活</span>
       </span>-->
     </el-dialog>
 
@@ -330,9 +378,21 @@
   import HighchartsMore from 'highcharts/highcharts-more';
   import HighchartsDrilldown from 'highcharts/modules/drilldown';
   import Highcharts3D from 'highcharts/highcharts-3d';
-  //import darkBlue from 'highcharts/themes/dark-blue';
-  import darkBlue from 'highcharts/themes/sand-signika';
+  import darkBlue from 'highcharts/themes/dark-blue';
+  //import darkBlue from 'highcharts/themes/sand-signika';
   import Map from './map';
+  //import liveCompany from './liveCompany';
+  import test from './test';
+  import mapArea from './mapArea';
+  import Register from './register';  //注册数量
+  import Assets from './assets';  //注册资本
+  import Insured from './insured';  //参保人数
+  import SurvivalRate from './survivalRate';  //营商活力
+  import AbnormalRate from './abnormalRate';  //死亡率
+  import Business from './business';   //行业分布
+  import Economic from './economic';   //数字经济
+  import Factory from './factory';   //工业和制造业
+  import Cloud from './cloud';   //词云图
 
   HighchartsMore(Highcharts)
   HighchartsDrilldown(Highcharts);
@@ -340,7 +400,7 @@
   darkBlue(Highcharts);
 export default {
   name: 'HelloWorld',
-  components: { Map },
+  components: { Map, test, mapArea, Register, Assets, Insured, SurvivalRate, AbnormalRate, Business, Economic, Factory, Cloud },
   data () {
     const yearOptions = () => {
       let arr = [];
@@ -360,11 +420,14 @@ export default {
       return arr;
     };
     return {
+      date: new Date(),
+      dateFormat: '',
       tab: 'first',
       isTestImg: 'testImg',
       isStop: 'stop',
       listLoading: true,
       centerDialogVisible: false,
+      modal: true,
       auto: true,
       cancel: false,
       switchs: false,
@@ -381,6 +444,8 @@ export default {
       item2: 'item2',
       item3: 'item3',
       item4: 'item4',
+      item5: 'item5',
+      item6: 'item6',
       homes: ['../../static/home1.png','../../static/home2.png'],
       hydm: 'A',
       year: '1996',
@@ -604,12 +669,8 @@ export default {
       dataSum: [],
       registTotal: 0,
       dateString: '',
-      full: true
+      full: false
     }
-  },
-  created () {
-    //this.time();
-    //this.hydm = 'B';
   },
   watch: {
     "type" (newval,oldval) {
@@ -919,10 +980,14 @@ export default {
         this.xxcs = false;
         this.zl = false;
       }
-    }
+    },
+  },
+  created () {
+    this.getDate()
+    //setInterval("this.getDate()",1000);
   },
   mounted(){
-    this.time('all');
+    /*this.time('all');
     this.area('all');
     this.workTime('all');
     this.workArea('all');
@@ -934,9 +999,30 @@ export default {
     this.drawLineWork();
     this.drawLineWorks();
     this.drawLineMoney();
-    this.drawLineMoneys();
+    this.drawLineMoneys();*/
   },
   methods: {
+    getDate() {
+      let seperator1 = "-";
+      let year = this.date.getFullYear();
+      let month = this.date.getMonth() + 1;
+      let strDate = this.date.getDate();
+      let hour = this.date.getHours();
+      let minute = this.date.getMinutes();
+      let second = this.date.getSeconds();
+      if (month >= 1 && month <= 9) {
+        month = "0" + month;
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+      }
+      hour.length < 2 ? hour = '0' + hour : hour;
+      minute.length < 2 ? minute = '0' + minute : minute;
+      second.length < 2 ? second = '0' + second : second;
+      //let currentdate = year + seperator1 + month + seperator1 + strDate + hour + ':' + minute + ':' + second;
+      let currentdate = year + seperator1 + month + seperator1 + strDate;
+      this.dateFormat = currentdate;
+    },
     tabClick(tab, event) {
       console.log(tab,event);
     },
@@ -1709,6 +1795,7 @@ export default {
           tickmarkPlacement: 'on',
           lineWidth: 0,
           lineColor: 'red',
+          gridLineColor: '#ccc',
           labels: {
             style: {
               "color": "#666666", "cursor": "default", "fontSize": "14px","fontWeight": "bold"
@@ -3020,10 +3107,10 @@ export default {
     list-style-type: none;
     padding: 0;
   }
-  li {
+  /*li {
     display: inline-block;
     margin: 0 10px;
-  }
+  }*/
   a {
     color: #42b983;
   }
@@ -3044,6 +3131,41 @@ export default {
   }
   .stop {
     animation-play-state: paused;
+  }
+  .slider {
+    width:400px;
+    height:150px;
+    /*border: 1px solid red;*/
+    display: inline-block;
+    /*margin-top:10px;*/
+  }
+  .sliderLeft {
+    width:407px;
+    height:900px;
+    opacity: 0.9;
+    z-index: 1;
+    display: inline-flex;
+    text-align: center;
+    flex-direction: column;
+    justify-content: space-between;
+    float: left;
+    position: relative;
+    margin-top:7px;
+    margin-left: 7px;
+  }
+  .sliderRight {
+    width:407px;
+    height:900px;
+    opacity: 0.9;
+    z-index: 1;
+    display: inline-flex;
+    text-align: center;
+    flex-direction: column;
+    justify-content: space-between;
+    float: right;
+    position: relative;
+    margin-top:7px;
+    margin-left: 7px;
   }
 
 </style>
