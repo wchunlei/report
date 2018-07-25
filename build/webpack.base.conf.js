@@ -65,7 +65,17 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
+      },
+      {  //手动添加这一条，相当于是编译识别sass!
+        test: /\.scss$/,
+        loaders: 'style-loader!css-loader!sass-loader'
       }
+      /*{
+        test: /\.css$/,
+        //下面两行，作用相同，选择自己比较喜欢的样式即可
+        // use: [ 'style-loader', 'css-loader' ]
+        loader: 'style-loader!css-loader'
+      }*/
     ]
   },
   plugins: [
@@ -73,6 +83,9 @@ module.exports = {
     new webpack.ProvidePlugin({
       jQuery: "jquery",
       $: "jquery"
+    }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production')
     })
   ],
   node: {
